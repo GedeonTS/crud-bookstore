@@ -126,7 +126,7 @@ function App() {
               <p >
                 {
                 active.key == rtbBooks.indexOf(book) && active.postion==='title'?
-                <input 
+                <input className="border"
                 type="text"
                 value={active.bookTitle} 
                 onChange={
@@ -143,11 +143,12 @@ function App() {
                   setUpdated(book.bookTitle)
                 }}>{book.bookTitle}</span>} {' '}
                   
-                  <b>by</b> {' '}
+                  <i>by</i> {' '}
 
                   {
                 active.key == rtbBooks.indexOf(book) && active.postion==='author'?
                 <input 
+                className="border"
                 type="text"
                 value={active.bookAuthor} 
                 onChange={

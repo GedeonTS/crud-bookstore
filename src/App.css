@@ -1,0 +1,11 @@
+.border:focus {
+    outline:none;
+    border:none
+}
+.border {
+    border:none;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    width: auto;
+}
