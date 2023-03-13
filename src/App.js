@@ -69,16 +69,20 @@ function App() {
           <input
             type="text"
             name="bookTitle"
+            value={bookTitle}
             placeholder="book name"
             onChange={(e) => setBookTitle(e.target.value)}
+            required
           />
           <input
             type="text"
             name="bookAuthor"
             placeholder="book author"
+            value={bookAuthor}
             onChange={(e) => {
               setBookAuthor(e.target.value);
             }}
+            required
           />
           <button type="submit">Add Book</button>
         </form>
