@@ -11,6 +11,8 @@ function App() {
   const [rtbBooks, setRtbBooks] = useState([]);
   const [bookTitle, setBookTitle] = useState("");
   const [bookAuthor, setBookAuthor] = useState("");
+  const [active, setActive]=useState({bookTitle:'',bookAuthor:'',postion:'',key:''})
+  const [updated,setUpdated] = useState(null)
 
   // Get Books from the realtime database
   useEffect(() => {
@@ -50,6 +52,7 @@ function App() {
     }
   };
 
+  // Submit book creation form
   const handleSumbit = (e) => {
     e.preventDefault();
     addBookToRealtimeDB(bookTitle, bookAuthor);
@@ -57,6 +60,36 @@ function App() {
     setBookTitle("");
     setBookAuthor("");
   };
+
+  //submit book update form
+
+  const handleUpdate =async (active)=>{
+    try {
+      const bookRef = ref(RealtimeDatabase, "books/" + active.bookTitle);
+   
+        await set(bookRef, {
+          bookTitle:active.bookTitle,
+          bookAuthor: active.bookAuthor,
+        });
+      
+     setActive({bookTitle:'',bookAuthor:'',postion:'',key:''})
+    
+    } catch (error) {
+      console.log("Error Updating:", error);
+    }
+
+  
+ 
+  }
+
+  const handleKeyPress=(event,active) => {
+    if(event.key === 'Enter'){
+      handleUpdate(active)
+      deleteBookFromRealtimeDB(updated)
+      setUpdated(null)
+      console.log('enter press here! ')
+    }
+  }
 
   return (
     <div className="App">
@@ -89,10 +122,48 @@ function App() {
 
         <ul>
           {rtbBooks.map((book) => (
-            <li key={book.bookTitle}>
-              <p>{book.bookTitle} by {book.bookAuthor}</p>{console.log(book)}
+            <li key={rtbBooks.indexOf(book)}>
+              <p >
+                {
+                active.key == rtbBooks.indexOf(book) && active.postion==='title'?
+                <input 
+                type="text"
+                value={active.bookTitle} 
+                onChange={
+                 
+                  (e)=>{
+                    e.preventDefault()
+                    setActive({...active, bookTitle:e.target.value})
+                }
+                }
+                onKeyPress={(e)=>{handleKeyPress(e,active)
+                }}
+                />:
+                  <span onClick={()=>{setActive({bookTitle:book.bookTitle,bookAuthor:book.bookAuthor,postion:'title',key:rtbBooks.indexOf(book)})
+                  setUpdated(book.bookTitle)
+                }}>{book.bookTitle}</span>} {' '}
+                  
+                  <b>by</b> {' '}
+
+                  {
+                active.key == rtbBooks.indexOf(book) && active.postion==='author'?
+                <input 
+                type="text"
+                value={active.bookAuthor} 
+                onChange={
+                 
+                  (e)=>{
+                    e.preventDefault()
+                    setActive({...active, bookAuthor:e.target.value})
+                }
+                }
+                onKeyPress={(e)=>{handleKeyPress(e,active)
+                }}
+                />: 
+                  <span onClick={()=>setActive({bookTitle:book.bookTitle,bookAuthor:book.bookAuthor,postion:'author',key:rtbBooks.indexOf(book)})}>{book.bookAuthor}</span>}</p>
               <button
                 type="button"
+
                 onClick={() => deleteBookFromRealtimeDB(book.bookTitle)}
               >
                 Remove
